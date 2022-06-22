@@ -38,7 +38,6 @@ export function Card({ data, viewImage }: CardProps): JSX.Element {
           cursor="pointer"
         />
       </Skeleton>
-
       <Box pt={5} pb={4} px={6}>
         {isLoading ? (
           <>
