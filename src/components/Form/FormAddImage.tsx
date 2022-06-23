@@ -18,13 +18,25 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
 
   const formValidations = {
     image: {
-      // TODO REQUIRED, LESS THAN 10 MB AND ACCEPTED FORMATS VALIDATIONS
+      required: 'Image is required',
     },
     title: {
-      // TODO REQUIRED, MIN AND MAX LENGTH VALIDATIONS
+      required: 'Titulo obrigatório',
+      minLength: {
+        value: 2,
+        message: 'Titulo deve ter no mínimo 2 caracteres',
+      },
+      maxLength: {
+        value: 20,
+        message: 'Titulo deve ter no máximo 20 caracteres',
+      }
     },
     description: {
-      // TODO REQUIRED, MAX LENGTH VALIDATIONS
+      required: 'Descrição obrigatória',
+      maxLength: {
+        value: 65,
+        message: 'Descrição deve ter no máximo 65 caracteres',
+      }
     },
   };
 
@@ -62,6 +74,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
     <Box as="form" width="100%" onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={4}>
         <FileInput
+          name='image'
           setImageUrl={setImageUrl}
           localImageUrl={localImageUrl}
           setLocalImageUrl={setLocalImageUrl}
