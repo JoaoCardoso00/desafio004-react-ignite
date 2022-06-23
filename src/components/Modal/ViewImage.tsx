@@ -23,10 +23,13 @@ export function ModalViewImage({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalBody>
-          <Image src={imgUrl} alt="Imagem" />
-        </ModalBody>
+        <Image src={imgUrl} alt="Imagem" maxHeight="600px" maxWidth="900px" />
+        <ModalFooter bgColor="pGray.800" borderBottomRadius="2px">
+          <a href={imgUrl} target="__blank">
+            Abrir original
+          </a>
+        </ModalFooter>
       </ModalContent>
     </Modal>
-  )
+  );
 }

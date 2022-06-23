@@ -21,10 +21,8 @@ export function CardList({ cards }: CardsProps): JSX.Element {
   const [imgUrl, setImgUrl] = useState<string>();
 
   function handleViewImage(imgUrl:string) {
-
     setImgUrl(imgUrl);
     onOpen();
-
   }
 
 
