@@ -8,11 +8,28 @@ import { api } from '../services/api';
 import { Loading } from '../components/Loading';
 import { Error } from '../components/Error';
 
+interface Image {
+  title: string;
+  description: string;
+  url: string;
+  ts: number;
+  id: string;
+}
+
+interface GetImagesResponse {
+  after: string;
+  data: Image[];
+}
+
 export default function Home(): JSX.Element {
-  const fetchImages = async ({ pageParam = null }) => {
-    const { data } = await api.get('images');
+  async function fetchImages({ pageParam = null }): Promise<GetImagesResponse> {
+    const { data } = await api('/api/images', {
+      params: {
+        after: pageParam,
+      },
+    });
     return data;
-  };
+  }
 
   const {
     data,
@@ -22,24 +39,36 @@ export default function Home(): JSX.Element {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery('images', fetchImages, {
-    getNextPageParam: (lastPage, pages) => lastPage.cursor,
+    getNextPageParam: lastPage => lastPage?.after || null,
   });
 
   const formattedData = useMemo(() => {
-    let res = data?.pages.map(image => image.data);
-    return res?.flat(1);
+    const formatted = data?.pages.flatMap(imageData => {
+      return imageData.data.flat();
+    });
+    return formatted;
   }, [data]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading && !isError) {
+    return <Loading />;
+  }
 
-  if (isError) return <Error />;
+  if (!isLoading && isError) {
+    return <Error />;
+  }
 
   return (
     <>
       <Header />
-      <Box maxW={1120} px={20} mx="auto" my={20}>
+
+      <Box maxW={1120} px={[10, 15, 20]} mx="auto" my={[10, 15, 20]}>
         <CardList cards={formattedData} />
-        {hasNextPage && (<Button onClick={() => fetchNextPage()}>{isFetchingNextPage ? "Carregando..." : "Carregar mais"}</Button>)}
+
+        {hasNextPage && (
+          <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+            {isFetchingNextPage ? 'Carregando...' : 'Carregar mais'}
+          </Button>
+        )}
       </Box>
     </>
   );
